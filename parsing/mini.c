@@ -6,48 +6,52 @@
 /*   By: iqattami <iqattami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 15:00:07 by iqattami          #+#    #+#             */
-/*   Updated: 2024/08/31 18:14:23 by iqattami         ###   ########.fr       */
+/*   Updated: 2024/09/05 19:30:59 by iqattami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-int main(int ac, char **av)
+int main()
 {
-	(void)ac;
-	(void)av;
-    char **split;
-    int count;
-	int i = 0;
     
-    while (1)
-    {
-        char *line = put_prompt();
-        count = count_word(line, ' ');
-        split = malloc(sizeof(char *) * (count + 1));
-		
-		split = ft_split(line, ' ');
-		while (split[i])
-		{
-			printf("%s\n", split[i++]);
-		}
-        
-        
-        if (!line || strcmp(line, "exit") == 0)
+        t_parse *split;
+        char *str = "jh | sgd  \" kajsdhfkajhf\" ";
+        printf ("----------\n");
+        if(sd_quotes(str))
         {
-            free(line);
-            break;
+            exit(1);
+        }
+        split = split_line (str);
+        while (split)
+        {
+            printf("%s\n", split->content);
+            split = split->next;
         }
 
-        if (*line)
-            add_history(line);
+    // char **split;
+    
+    // while (1)
+    // {
+    //     char *line = put_prompt();
+    //     if (sd_quotes(line) == 0)
+    //     {
+	// 	    split = ft_split(line);        
+    //         if (!line || strcmp(line, "exit") == 0)
+    //         {
+    //             free(line);
+    //          break;
+    //         }
 
-        printf("You entered: %s\n", line);
-        
-        free(line);
-    }
 
-    printf("Exiting...\n");
-    return 0;
+    //         printf("You entered: %s\n", line);
+    //         ft_free (split);
+    //     }
+    //     if (*line)
+    //         add_history(line);
+    //     free(line);
+    // }
+    // printf("Exiting...\n");
+    // return 0;
 }
 

@@ -5,107 +5,114 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: iqattami <iqattami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/31 17:50:00 by iqattami          #+#    #+#             */
-/*   Updated: 2024/08/31 17:50:12 by iqattami         ###   ########.fr       */
+/*   Created: 2024/09/03 16:53:21 by iqattami          #+#    #+#             */
+/*   Updated: 2024/09/05 19:30:34 by iqattami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
- int	count_word(char const *str, char charset)
+void ft_free(char **str)
 {
-	int	i;
-	int	count;
+	int i = 0;
 
-	i = 0;
-	count = 0;
+	while (str[i])
+		free (str[i++]);
+	free (str);
+}
+
+char *ft_strncpy(char *s1, char *s2, int n)
+{
+	int i = -1;
+
+	while (++i < n && s2[i])
+		s1[i] = s2[i];
+	s1[i] = '\0';
+	return (s1);
+}
+char *ft_strcpy(char *s1, char s2)
+{
+	s1[0] = s2;
+	s1[1] = '\0';
+	return (s1);
+}
+
+char	**ft_split(char *str)
+{
+	int i = 0;
+	int j = 0;
+	int k = 0;
+	int wc = 0;
+	
 	while (str[i])
 	{
-		while (str[i] && str[i] == charset)
+		while (str[i] && (str[i] == ' ' || str[i] == '\t'))
 			i++;
-		if (str[i])
-			count++;
-		while (str[i] && str[i] != charset)
-			i++;
-	}
-	return (count);
-}
-
-static char	*malloc_word(char const *str, int i, char charset)
-{
-	int		j;
-	char	*tab;
-	int		len;
-
-	len = 0;
-	j = i;
-	while (str[j] && str[j] != charset)
-	{
-		j++;
-		len++;
-	}
-	tab = malloc(sizeof(char) * (len + 1));
-	if (!tab)
-		return (NULL);
-	j = 0;
-	while (j < len)
-	{
-		tab[j] = str[i];
-		i++;
-		j++;
-	}
-	tab[j] = '\0';
-	return (tab);
-}
-
-static char	**free_split(char **str, int j)
-{
-	int	i;
-
-	i = 0;
-	while (i < j)
-	{
-		free(str[i]);
-		i++;
-	}
-	free(str);
-	return (NULL);
-}
-
-static char	**sub_split(char const *str, char charset, char **tab)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (str[i])
-	{
-		while (str[i] && str[i] == charset)
-			i++;
-		if (str[i])
+		if (str[i] == '"')
 		{
-			tab[j] = malloc_word(str, i, charset);
-			if (tab[j] == NULL)
-				return (free_split(tab, j));
-			j++;
-		}
-		while (str[i] && str[i] != charset)
 			i++;
+			while (str[i] != '"')
+			{
+				if (str[i] == '"')
+					break;
+				i++;
+			}
+			if (str[i])
+				wc++;
+		}
+		while (str[i] && (str[i] != ' ' && str[i] != '\t') && str[i] != '"')
+			i++;
+		if (str[i])
+			wc++;
 	}
-	tab[j] = 0;
-	return (tab);
+	printf("%d\n", wc);
+	char **out = (char **)malloc(sizeof(char *) * (wc + 1));
+	i = 0;
+	
+	while (str[i])
+	{
+		while (str[i] && (str[i] == ' ' || str[i] == '\t'))
+			i++;
+		j = i;
+		while (str[i] && (str[i] != ' ' && str[i] != '\t'))
+			i++;
+		if (i > j)
+		{
+			out[k] = (char *)malloc(sizeof(char) * ((i - j) + 1));
+			ft_strncpy(out[k++], &str[j], i - j);
+		}
+	}
+	out[k] = NULL;
+	return (out);
 }
 
-char	**ft_split(char const *str, char charset)
+t_parse *split_line(char *line)
 {
-	char	**tab;
-
-	if (str == NULL)
-		return (NULL);
-	tab = (char **)malloc(sizeof(char *) * (count_word(str, charset) + 1));
-	if (!tab)
-		return (NULL);
-	tab = sub_split(str, charset, tab);
-	return (tab);
+	int  i;
+	int j;
+	char *str;
+	char tmp[2];
+	t_parse *head;
+	head = NULL;
+	i = 0;
+	while(line[i])
+	{
+		printf(" ---------->>>>  %c\n", line[i]);
+		j = i;
+		while((line[i ] != '|' && (line[i ] != '>' && line[i ] != '<')) )
+			i++;
+		if (i > j)
+		{
+			str = (char *)malloc(sizeof(char) * ((i - j) + 1));
+			ft_strncpy(str, &line[j], i - j );
+		}
+		add_token(&head, str, cmp(str));
+		if (line[i] != '\0')
+		{	
+			add_token(&head, ft_strcpy(tmp, line[i]), cmp(tmp));
+			i++;
+		}
+		// free(str);
+	}
+	return(head);
 }

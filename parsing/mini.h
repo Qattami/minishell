@@ -6,7 +6,7 @@
 /*   By: iqattami <iqattami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 20:19:16 by iqattami          #+#    #+#             */
-/*   Updated: 2024/08/31 18:10:38 by iqattami         ###   ########.fr       */
+/*   Updated: 2024/09/05 18:56:38 by iqattami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,15 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-# define pip 1
+# define pipe 1
 # define input 2
 # define output 3
-# define delimiter 4
-# define redirect 5
+# define heredoc 4
+# define redirection 5
 # define squote 6
 # define dquote 7
+# define word 8
+#define command 9
  
 typedef struct f_env
 {
@@ -42,9 +44,13 @@ typedef struct s_parse
 }t_parse;
 
 char *put_prompt();
-void sd_quotes(char *line);
+int sd_quotes(char *line);
 char	*ft_strdup(const char *s);
- int	count_word(char const *str, char charset);
- char	**ft_split(char const *str, char charset);
+int	count_word(char const *str, char charset);
+char	**ft_split(char *str);
+void ft_free(char **str);
+void add_token(t_parse **head, char *content, int type);
+int cmp(char *split);
+t_parse *split_line(char *line);
 
 #endif

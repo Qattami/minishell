@@ -6,7 +6,7 @@
 /*   By: iqattami <iqattami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 15:08:18 by iqattami          #+#    #+#             */
-/*   Updated: 2024/08/31 17:56:05 by iqattami         ###   ########.fr       */
+/*   Updated: 2024/09/05 18:58:33 by iqattami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,31 +23,56 @@ t_parse *new_token(char *content, int type)
     return new_node;
 }
 
-t_parse	*ft_lstlast(t_parse *lst)
+void add_token(t_parse **head, char *content, int type)
 {
-	t_parse	*tmp;
+    t_parse *new_node = new_token(content, type);
+    if (!new_node)
+        return;
+    if (!(*head))
+    {
+        *head = new_node  ; 
 
-	tmp = lst;
-	while (tmp->next != NULL)
-	{
-		tmp = tmp->next;
-	}
-	return (tmp);
+    }
+    else
+    {
+        t_parse *temp = *head;
+        while (temp->next)
+            temp = temp->next;
+        temp->next = new_node;
+    }
 }
 
-void	ft_lstadd_back(t_parse **lst, t_parse *new)
+void parse_input(char **split, t_parse **head)
 {
-	t_parse	*tmp;
+    int i;
 
-	if (lst == NULL || new == NULL)
-		return ;
-	tmp = *lst;
-	if (tmp)
-	{
-		tmp = ft_lstlast(tmp);
-		tmp->next = new;
-	}
-	else
-		*lst = new;
+    i = 0;
+    while (split[i])
+    {
+        add_token(head, split[i], cmp(split[i]));
+        i++;
+    }
 }
 
+int cmp(char *split)
+{
+    if(strcmp(split, "|") == 0)
+        return(pipe);
+    else if(strcmp(split, "\"") == 0)
+        return(dquote);
+    else if(strcmp(split, "'") == 0)
+        return(squote);
+    else if(strcmp(split, ">") == 0)
+        return(output);
+    else if(strcmp(split, "<") == 0)
+        return(input);
+    else if(strcmp(split, ">>") == 0)
+        return(redirection);
+    else if(strcmp(split, "<<") == 0)
+        return(heredoc);
+    else if(strcmp(split, "cd") == 0 || strcmp(split, "echo") == 0 || strcmp(split, "pwd") == 0 
+            || strcmp(split, "export") == 0 || strcmp(split, "unset") == 0 || strcmp(split, "env") == 0)
+        return (command);
+    else
+        return(word);
+}

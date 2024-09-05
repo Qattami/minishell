@@ -6,7 +6,7 @@
 /*   By: iqattami <iqattami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 20:57:39 by iqattami          #+#    #+#             */
-/*   Updated: 2024/08/31 18:12:06 by iqattami         ###   ########.fr       */
+/*   Updated: 2024/09/05 16:22:41 by iqattami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char *put_prompt()
     line = readline("minishel >> ");
     return (line);
 }
-void sd_quotes(char *line)
+int sd_quotes(char *line)
 {
     int squotes;
     int dquotes;
@@ -44,7 +44,8 @@ void sd_quotes(char *line)
         i++;
     }
     if(squotes == 1 || dquotes == 1)
-        printf("syntax error\n");
+        return (printf("syntax error\n"), 1);
+    return 0;
 }
 
 char	*ft_strdup(const char *s)
