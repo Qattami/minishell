@@ -1,33 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   putstr.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iqattami <iqattami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/15 14:43:51 by iqattami          #+#    #+#             */
-/*   Updated: 2024/10/15 15:00:03 by iqattami         ###   ########.fr       */
+/*   Created: 2024/10/15 14:33:15 by iqattami          #+#    #+#             */
+/*   Updated: 2024/10/15 15:05:53 by iqattami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parsing/mini.h"
 
-
-void change_directory(int ac, char **av)
+void	ft_putchar_fd(char c, int fd)
 {
-    if(ac > 1)
-    {
-        if(!av[1])
-            av[1] = getenv("HOME");
-        if(!av[1])
-        {
-            put_str("HOME not set\n");
-            exit(1);
-        }
-        if(chdir(av[1]) == -1)
-        {
-            ft_putstr("path invalide");
-            exit(1);
-        }
-    }
+	write(fd, &c, 1);
+}
+
+void	ft_putstr_fd(char *s, int fd)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		ft_putchar_fd(s[i], fd);
+		i++;
+	}
 }
